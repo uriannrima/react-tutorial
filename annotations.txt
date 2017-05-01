@@ -161,3 +161,5 @@ Or you may get from history:
 
     <div class="container" style={containerStyle}>
     </div>
+
+12) ES6 Destructuring: {...object}
