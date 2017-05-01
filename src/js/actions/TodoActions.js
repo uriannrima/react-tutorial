@@ -1,13 +1,5 @@
 import dispatcher from "../dispatcher";
 
-/**
-export default {
-    createTodo: function() {
-
-    }
-}
-**/
-
 export function createTodo(text) {
     dispatcher.dispatch({
         type: "CREATE_TODO",

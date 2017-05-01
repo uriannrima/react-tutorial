@@ -3,6 +3,11 @@ import React from "react";
 export default class extends React.Component {
   constructor(props) {
     super();
+    this.onDelete = this.onDelete.bind(this);
+  }
+
+  onDelete(e) {
+    this.props.onDeleteTodo(e, this.props.id);
   }
 
   render() {
@@ -13,7 +18,7 @@ export default class extends React.Component {
     if (edit) {
       return (
         <li>
-          <input value={text} focus="focused"/>
+          <input value={text} focus="focused" />
         </li>
       );
     }
@@ -21,7 +26,7 @@ export default class extends React.Component {
     return (
       <li>
         <span>{text} </span>
-        <span onClick={this.props.onDeleteTodo}> {icon}</span>
+        <span onClick={this.onDelete}> {icon}</span>
       </li>
     );
   }

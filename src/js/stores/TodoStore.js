@@ -1,28 +1,22 @@
 import { EventEmitter } from "events";
 import dispatcher from "../dispatcher";
+import * as Utils from "../utils";
 
 class TodoStore extends EventEmitter {
     constructor() {
         super();
-        this.todos = [
-            {
-                id: "6087095d-cc39-438f-b363-042329492bd8",
-                text: "Learn React",
-                complete: false
-            },
-            {
-                id: "52a391ce-4cf8-44d4-90e8-93411df85c31",
-                text: "Git Gud!",
-                complete: false
-            }
-        ];
+        this.todos = [];
+        this.handleActions = this.handleActions.bind(this);
     }
 
     handleActions(action) {
         switch (action.type) {
-            case "CREATE_TODO": {
+            case "CREATE_TODO":
                 this.createTodo(action.text);
-            }
+                break;
+            case "DELETE_TODO":
+                this.deleteTodo(action.id);
+                break;
         }
     }
 
@@ -32,9 +26,17 @@ class TodoStore extends EventEmitter {
 
     createTodo(text) {
         this.todos.push({
-            id: Date.now(),
+            id: Utils.generateGuid(),
             text,
             complete: false
+        });
+
+        this.emit("change");
+    }
+
+    deleteTodo(id) {
+        this.todos = this.todos.filter((todo) => {
+            return todo.id !== id;
         });
 
         this.emit("change");
@@ -42,6 +44,5 @@ class TodoStore extends EventEmitter {
 }
 
 const todoStore = new TodoStore();
-dispatcher.register(todoStore.handleActions.bind(todoStore));
-window.dispatcher = dispatcher;
+dispatcher.register(todoStore.handleActions);
 export default todoStore;

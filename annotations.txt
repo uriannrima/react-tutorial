@@ -163,3 +163,6 @@ Or you may get from history:
     </div>
 
 12) ES6 Destructuring: {...object}
+You may use it to create elements and pass each of the properties for it:
+    <Todo key={todo.id} {...todo} onDeleteTodo={this.onDeleteTodo}/>
+Since there is {...todo}, the  component Todo may acceess each todo.property inside of it.

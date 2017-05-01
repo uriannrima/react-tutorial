@@ -14,6 +14,7 @@ export default class extends React.Component {
             todos: TodoStore.getAll()
         };
 
+        this.createTodo = this.createTodo.bind(this);
         this.onTodoTextChange = this.onTodoTextChange.bind(this);
         this.onDeleteTodo = this.onDeleteTodo.bind(this);
     }
@@ -28,15 +29,16 @@ export default class extends React.Component {
         })
     }
 
-    createTodo() {
+    createTodo(e) {
+        if (e.type === "keyup" && e.keyCode !== 13) return;
         TodoActions.createTodo(this.state.newTodo.text);
         this.setState({
             newTodo: { text: "" }
         });
     }
 
-    onDeleteTodo(e){
-        console.log("Delete todo...");
+    onDeleteTodo(e, id){
+        TodoActions.deleteTodo(id);
     }
 
     onTodoTextChange(e) {
@@ -58,12 +60,11 @@ export default class extends React.Component {
             return <Todo key={todo.id} {...todo} onDeleteTodo={this.onDeleteTodo}/>;
         });
 
-        console.log(newTodo);
         return (
             <div>
-                <button onClick={this.createTodo.bind(this)}>Create!</button>
-                <input value={newTodo.text} onChange={this.onTodoTextChange}></input>
                 <h1>Todos</h1>
+                <input placeholder="Press enter to create..." value={newTodo.text} onChange={this.onTodoTextChange} onKeyUp={this.createTodo}></input>
+                <button onClick={this.createTodo}>Create!</button>
                 <ul>{TodosComponents}</ul>
             </div>
         );
