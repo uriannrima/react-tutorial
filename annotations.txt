@@ -1,0 +1,163 @@
+1) Serving with webpack-dev-server
+    webpack-dev-server => Used to host things up on 8080 using:
+        webpack-dev-server --content-base  path/to/base/folder
+    like:
+        webpack-dev-server --content-base src
+    So, index.html inside of it will be hosted on localhost:8080.
+    If you want "livereload" you may use the same command above, but access the url:
+        localhost:8080/webpack-dev-server/
+
+    Which contains every file inside src, like index.html.
+    Or, you may use the command:
+        webpack-dev-server --content-base --inline --hot
+
+    To this to work, the dev must have webpack-dev-sever installed on global, if you don't want it
+    Add the webpack-dev-server into the package.json (like already is now) and use the command:
+        ./node_modules/.bin/webpack-dev-server --content-base --inline --hot
+    Now it will use the webpack-dev-server installed from the package.json
+
+2) Remember how to create anonymous functions:
+
+    (function(){
+        return value;
+    })()
+
+Or 
+
+    () => {
+        return value;
+    };
+
+3) React use SINGLE {}, not {{}}
+
+4) ES6 constructors:
+
+constructor() {
+    super(); // Remember to call super always when somethings extends another.
+    this.name = "Will";
+}
+
+5) List of DOMs Elements:
+You may create a list of DOM elements, React will understand and render it.
+
+var list = [
+    <Header/>,
+    <Header/>,
+    <Header/>
+];
+
+return (
+    <div>
+        {list}
+    </div>
+);
+
+6) States or Props:
+States are used ONLY for things that are important INSIDE the component
+and only affects THAT component and don't affect the rest of the app.
+Even that way, it MIGHT be of good use.
+You should try to avoid States as much as possible and try to use props.
+
+Props are values injected from other components, up or down.
+Inside Layout you may use:
+
+    <Header name="Some thing" title={title}/>
+
+This way, Layout is injecting on Header a prop, that can be accessed while inside of Header through:
+
+    this.props.title
+
+Events can be passed too, like (see bind below):
+
+    <Header onChangeTitle={this.onChangeTitle.bind(this)} title={this.state.title} />
+
+And Header may call the event like:
+
+    this.props.onChangeTitle(title);
+
+For exemple (inside of Header):
+
+    // Bind the event onChange from the input to the onInputTitleChanged from Header.
+    <input value={this.props.title} onChange={this.onInputTitleChanged.bind(this)} />
+
+    onInputTitleChanged(e) {
+        // E is just a normal Javascript Event (wrapped)
+        const title = e.target.value;
+
+        // Call  onChangeTitle that was passed to Header, which is the onChangeTitle from Layout.
+        this.props.onChangeTitle(title);
+    }
+
+As you can see, Header doesn't care for what was passed to him, or what will happen in the end of the process
+It just receive it and send it after input from the user.   
+
+7) Remember to bind things this.function.bind(this)
+If you don't bind a function to where it should be executed, it  WILL get executed inside ANOTHER context.
+
+8) Route
+The main "route" is the Layout, it will keep all the others routes, like Featured (Which is the index, or default state)
+Archives and Settings. When the user click on some of the Route inside the Layout, it changes the this.props.children from Layout.
+
+<Router history={hashHistory}>
+    <Route path="/" component={Layout}>
+        <IndexRoute component={Featured}></IndexRoute>
+        <Route path="archives" component={Archives}></Route>
+        <Route path="settings" component={Settings}></Route>
+    </Route>
+</Router>
+
+For example, this.props.children will render the active route children inside of layout
+
+Layout.js:
+
+navigate() {
+    // Replace state on history, so you won't be able to go to the previous state.
+    // this.props.history.replaceState(null, "/");
+
+    // Create new state on history, so you may return through histroy back button.
+    // this.props.history.pushState(null, "/");
+}
+
+<div>
+    <h1>KillerNews.net</h1>
+    {this.props.children}
+    <Link to="archives" class="btn btn-danger">archives</Link>
+    <Link to="settings"><button class="btn btn-success">settings</button></Link>
+    <button onClick={this.navigate.bind(this)}>featured</button>
+</div>
+
+9) Route params and Query String:
+
+Mandatory route param:
+    <Route path="archives/:article" component={Archives}></Route>
+Optional route para:
+    <Route path="archives(/:article)" component={Archives}></Route>
+    
+Accessed through this.props.params.article inside the component from route.
+And remember, always ES6:
+
+    const { params } = this.props;
+    const { article } = params;
+    <h1>Archives({article})</h1>
+
+Querystring may be used without any configuration:
+    http://localhost:8080/#/archives/some-other-article?date=today&filter=none
+    this.props.location.query.date
+    this.props.location.query.filter
+Or:
+    const { query  } = this.props.location;
+    const { date, filter } = query;
+
+10) Active route:
+Since Link is used to change routes, you may use activeClassName:
+    <Link to="archives" activeClassName="test" class="btn btn-danger">archives</Link>
+Or you may get from history:
+    this.props.history.isActive("archives");
+
+11) Inline style:
+    const containerStyle = {
+        marginTop: "60px" // or you may use "margin-top", React create the "-" on camelCase.
+    };
+
+    <div class="container" style={containerStyle}>
+    </div>
