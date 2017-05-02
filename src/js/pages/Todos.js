@@ -3,6 +3,7 @@ import Todo from "../components/Todo";
 import TodoStore from "../stores/TodoStore";
 // Every export will be called as TodoAction, so all functions will be inside of it.
 import * as TodoActions from "../actions/TodoActions";
+import TodoConstants from "../constants/TodoConstants";
 
 export default class extends React.Component {
     constructor() {
@@ -14,48 +15,51 @@ export default class extends React.Component {
             todos: TodoStore.getAll()
         };
 
-        this.getTodos = this.getTodos.bind(this);
-        this.createTodo = this.createTodo.bind(this);
-        this.onTodoTextChange = this.updateNewTodo.bind(this);
-        this.onDeleteTodo = this.deleteTodo.bind(this);
-        this.reloadTodos = this.reloadTodos.bind(this);
     }
 
     // Will render for the FIRST time, and FIRST time only!!!
     // Always remember to release the event after this component is destroyed.
     componentWillMount() {
         // On store change, get all todos again...
-        TodoStore.on("change", this.getTodos);
-        console.log("listener count:", TodoStore.listenerCount("change"));
+        TodoStore.on(TodoConstants.onTodosChange, this.getTodos);
+        // console.log("listener count:", TodoStore.listenerCount("change"));
     }
 
     componentWillUnmount() {
-        TodoStore.removeListener("change", this.getTodos);
+        TodoStore.removeListener(TodoConstants.onTodosChange, this.getTodos);
     }
 
-    getTodos() {
+    getTodos = () => {
         this.setState({
             todos: TodoStore.getAll()
         });
     }
 
-    createTodo(e) {
-        if (e.type === "keyup" && e.keyCode !== 13) return;
+    createTodo = (e) => {
+        if (e.type === "keyup" && e.which !== 13) return;
         TodoActions.createTodo(this.state.newTodo.text);
         this.setState({
             newTodo: { text: "" }
         });
     }
 
-    deleteTodo(e, id) {
+    deleteTodo = (e, id) => {
         TodoActions.deleteTodo(id);
     }
 
-    reloadTodos() {
+    reloadTodos = () => {
         TodoActions.reloadTodos();
     }
 
-    updateNewTodo(e) {
+    toggleComplete = (e, id) => {
+        TodoActions.toggleComplete(id);
+    }
+
+    clearCompleted = (e) => {
+        TodoActions.clearCompleted();
+    }
+
+    updateNewTodo = (e) => {
         //Extract the todo from the state
         var { newTodo } = this.state;
 
@@ -71,7 +75,7 @@ export default class extends React.Component {
     render() {
         const { todos, newTodo } = this.state;
         const TodosComponents = todos.map((todo) => {
-            return <Todo key={todo.id} {...todo} onDeleteTodo={this.deleteTodo} />;
+            return <Todo key={todo.id} {...todo} onDeleteTodo={this.deleteTodo} onToggleComplete={this.toggleComplete}/>;
         });
 
         return (
@@ -80,6 +84,7 @@ export default class extends React.Component {
                 <input placeholder="Press enter to create..." value={newTodo.text} onChange={this.updateNewTodo} onKeyUp={this.createTodo}></input>
                 <button onClick={this.reloadTodos}>Reaload!</button>
                 <ul>{TodosComponents}</ul>
+                <a href="#" onClick={this.clearCompleted}>Clear completed!</a>
             </div>
         );
     }

@@ -1,16 +1,34 @@
 import dispatcher from "../dispatcher";
+import TodoConstants from "../constants/TodoConstants";
+
+function dispatch(action) {
+    dispatcher.dispatch(action);
+}
 
 export function createTodo(text) {
-    dispatcher.dispatch({
-        type: "CREATE_TODO",
+    dispatch({
+        type: TodoConstants.createTodo,
         text
     });
 }
 
 export function deleteTodo(id) {
-    dispatcher.dispatch({
-        type: "DELETE_TODO",
+    dispatch({
+        type: TodoConstants.deleteTodo,
         id
+    });
+}
+
+export function toggleComplete(id) {
+    dispatch({
+        type: TodoConstants.toggleComplete,
+        id
+    });
+}
+
+export function clearCompleted() {
+    dispatch({
+        type: TodoConstants.clearCompleted
     });
 }
 
@@ -20,7 +38,7 @@ export function reloadTodos() {
     //});
 
     dispatcher.dispatch({
-        type: "FETCH_TODOS"
+        type: TodoConstants.fetchTodos
     });
 
     setTimeout(() => {
@@ -38,14 +56,14 @@ export function reloadTodos() {
         ];
 
         dispatcher.dispatch({
-            type: "RECEIVE_TODOS",
+            type: TodoConstants.receiveTodos,
             todos: receivedData
         });
 
         if (false) {
             const e = new Error("Fake error.");
             dispatcher.dispatch({
-                type: "FETCH_TODOS_ERROR",
+                type: TodoConstants.fetchTodosError,
                 error: e
             });
         }

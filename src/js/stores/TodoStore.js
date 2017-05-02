@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import dispatcher from "../dispatcher";
 import * as Utils from "../utils";
+import TodoConstants from "../constants/TodoConstants";
 
 class TodoStore extends EventEmitter {
     constructor() {
@@ -11,14 +12,20 @@ class TodoStore extends EventEmitter {
 
     handleActions(action) {
         switch (action.type) {
-            case "CREATE_TODO":
+            case TodoConstants.createTodo:
                 this.createTodo(action.text);
                 break;
-            case "DELETE_TODO":
+            case TodoConstants.deleteTodo:
                 this.deleteTodo(action.id);
                 break;
-            case "RECEIVE_TODOS": 
+            case TodoConstants.receiveTodos:
                 this.receiveTodos(action.todos);
+                break;
+            case TodoConstants.toggleComplete:
+                this.toggleComplete(action.id);
+                break;
+            case TodoConstants.clearCompleted:
+                this.clearCompleted();
                 break;
         }
     }
@@ -34,7 +41,7 @@ class TodoStore extends EventEmitter {
             complete: false
         });
 
-        this.emit("change");
+        this.emitChange();
     }
 
     deleteTodo(id) {
@@ -42,12 +49,30 @@ class TodoStore extends EventEmitter {
             return todo.id !== id;
         });
 
-        this.emit("change");
+        this.emitChange();
     }
 
-    receiveTodos(todos){
+    receiveTodos(todos) {
         this.todos = todos;
-        this.emit("change");
+        this.emitChange();
+    }
+
+    toggleComplete(id) {
+        this.todos = this.todos.map((todo) => {
+            if (todo.id === id) todo.complete = !todo.complete;
+            return todo;
+        });
+
+        this.emitChange();
+    }
+
+    clearCompleted() {
+        this.todos = this.todos.filter((todo) => !todo.complete);
+        this.emitChange();
+    }
+
+    emitChange(){
+        this.emit(TodoConstants.onTodosChange);
     }
 }
 

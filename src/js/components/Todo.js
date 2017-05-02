@@ -10,6 +10,10 @@ export default class extends React.Component {
     this.props.onDeleteTodo(e, this.props.id);
   }
 
+  toggleComplete(e){
+    this.props.onToggleComplete(e, this.props.id);
+  }
+
   render() {
     const { complete, edit, text } = this.props;
 
@@ -25,6 +29,7 @@ export default class extends React.Component {
 
     return (
       <li>
+        <input type="checkbox" value={complete} checked={complete} onChange={this.toggleComplete.bind(this)}></input>
         <span>{text} </span>
         <span onClick={this.onDelete}> {icon}</span>
       </li>

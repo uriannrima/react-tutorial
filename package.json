@@ -13,7 +13,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
-    "flux": "^3.1.2",
+    "flux": "^2.1.1",
     "history": "^1.17.0",
     "react": "^0.14.9",
     "react-dom": "^0.14.6",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "dev": "webpack-dev-server --content-base src --inline --hot"
+    "dev": "webpack-dev-server --port 24028 --content-base src --inline --hot"
   },
   "author": "",
   "license": "ISC"
