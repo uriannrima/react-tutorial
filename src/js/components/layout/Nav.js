@@ -29,6 +29,7 @@ export default class extends React.Component {
 
         const NavItens = [
             { query: "/", label: "Todos", isIndex: true },
+            { query: "users", label: "Users" },
             { query: "featured", label: "Featured" },
             { query: "favorites", label: "Favorites" },
             { query: "settings", label: "Settings" }
