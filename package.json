@@ -32,7 +32,8 @@
     "webpack-dev-server": "^1.16.5"
   },
   "scripts": {
-    "dev": "webpack-dev-server --port 24028 --content-base src --inline --hot"
+    "dev": "webpack-dev-server --port 24028 --content-base src --inline --hot",
+    "prd": "webpack -p --progress --profile --colors"
   },
   "author": "",
   "license": "ISC"

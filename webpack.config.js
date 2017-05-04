@@ -1,10 +1,10 @@
-var debug = process.env.NODE_ENV !== "production";
+const debug = process.argv.indexOf('-p') === -1;
 var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
   context: path.join(__dirname, "src"), // Context where the command will execute.
-  devtool: debug ? "inline-sourcemap" : null,
+  devtool: debug ? "inline-sourcemap" : 'cheap-module-source-map',
   entry: {
     app: ["./client.js"],
     vendor: [
@@ -32,7 +32,7 @@ module.exports = {
     ]
   },
   output: {
-    path: __dirname + "/src/", // Where the transpiled client.js will be outputed
+    path: debug ? __dirname + "/src/" : __dirname + "/dist/", // Where the transpiled client.js will be outputed
     filename: "client.min.js" // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
   },
   plugins: debug ?
@@ -40,10 +40,21 @@ module.exports = {
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
     ] :
     [
+      new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } }),
       new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+      new webpack.optimize.UglifyJsPlugin({
+        beautify: false,
+        mangle: {
+          screw_ie8: true,
+          keep_fnames: true
+        },
+        compress: {
+          screw_ie8: true
+        },
+        comments: false
+      })
     ],
   resolve: {
     'root': [path.resolve('./src')],
