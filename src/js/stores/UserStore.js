@@ -1,5 +1,5 @@
 import { autorun, observable, computed } from "mobx";
-import * as Utils from "../utils";
+import * as Utils from "../../utils";
 
 class User {
     @observable id;

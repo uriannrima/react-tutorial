@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
-import dispatcher from "../dispatcher";
-import * as Utils from "../utils";
+import dispatcher from "../../dispatcher";
+import * as Utils from "../../utils";
 import TodoConstants from "../constants/TodoConstants";
 
 class TodoStore extends EventEmitter {

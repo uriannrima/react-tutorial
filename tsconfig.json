@@ -1,6 +1,19 @@
 {
     "compilerOptions": {
+        "target": "es6",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "allowJs": true,
         "experimentalDecorators": true,
-        "allowJs": true
-    }
+        "outDir": "build",
+        "jsx": "react"
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "./src/ts/**/*",
+        "./src/js/**/*"
+    ]
 }

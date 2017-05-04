@@ -5,18 +5,20 @@ var path = require('path');
 module.exports = {
   context: path.join(__dirname, "src"), // Context where the command will execute.
   devtool: debug ? "inline-sourcemap" : null,
-  entry: "./js/client.js", // Entry point of our aplication
+  entry: "./client.js",
   module: {
     loaders: [
+      // ts-loader: convert typescript (es6) to javascript (es6),
+      // babel-loader: converts javascript (es6) to javascript (es5)
+      {
+        test: /\.tsx?$/,
+        loaders: ['babel-loader', 'ts-loader'],
+        exclude: /(node_modules|bower_components)/
+      },
       {
         test: /\.jsx?$/, // Everything that is js(or jsx, the X is optional since there is a ?) will be processed by this loader, which...
         exclude: /(node_modules|bower_components)/, // Excludes anything inside node_modules and bower_components
-        loader: 'babel-loader', // Everything that this loader process will be processed by the babel-loader, wich suports...
-        query: {
-          presets: ['react', 'es2015', 'stage-0'], // React, ES2015 (IE 8) and some beta stuff
-          // React HTML Attrs allow you to use keyword "class" inside the JSX, otherwhise you would have to use className.
-          plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'], // Some stuff from ES6 and Decorators.
-        }
+        loader: 'babel', // Everything that this loader process will be processed by the babel
       }
     ]
   },
@@ -29,4 +31,8 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
   ],
+  resolve: {
+    'root': [path.resolve('./src')],
+    'extensions': ['', '.js', '.jsx', '.ts', '.tsx']
+  }
 };
