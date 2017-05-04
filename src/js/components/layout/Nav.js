@@ -33,7 +33,7 @@ export default class extends React.Component {
             { query: "featured", label: "Featured" },
             { query: "favorites", label: "Favorites" },
             { query: "settings", label: "Settings" },
-            { query: "hello", label: "Hello" }
+            { query: "feats", label: "Feats" }
         ].map((navItem, arrayIndex) => {
             return <NavItem
                 isIndex={navItem.isIndex}
