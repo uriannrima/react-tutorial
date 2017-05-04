@@ -5,7 +5,18 @@ var path = require('path');
 module.exports = {
   context: path.join(__dirname, "src"), // Context where the command will execute.
   devtool: debug ? "inline-sourcemap" : null,
-  entry: "./client.js",
+  entry: {
+    app: ["./client.js"],
+    vendor: [
+      'react',
+      'react-dom',
+      'react-router',
+      'flux',
+      'history',
+      'mobx',
+      'mobx-react'
+    ]
+  },
   module: {
     loaders: [
       {
@@ -24,13 +35,22 @@ module.exports = {
     path: __dirname + "/src/", // Where the transpiled client.js will be outputed
     filename: "client.min.js" // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
   },
-  plugins: debug ? [] : [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-  ],
+  plugins: debug ?
+    [
+      new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
+    ] :
+    [
+      new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.OccurenceOrderPlugin(),
+      new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    ],
   resolve: {
     'root': [path.resolve('./src')],
-    'extensions': ['', '.js', '.jsx', '.ts', '.tsx']
+    'extensions': ['', '.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      utils: path.resolve('./src/utils/'),
+      dispatcher: path.resolve('./src/dispatcher/'),
+    }
   }
 };
