@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
-import dispatcher from "../dispatcher";
-import * as Utils from "../utils";
+import dispatcher from "dispatcher";
+import * as utils from "utils";
 import TodoConstants from "../constants/TodoConstants";
 
 class TodoStore extends EventEmitter {
@@ -36,7 +36,7 @@ class TodoStore extends EventEmitter {
 
     createTodo(text) {
         this.todos.push({
-            id: Utils.generateGuid(),
+            id: utils.generateGuid(),
             text,
             complete: false
         });

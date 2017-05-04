@@ -1,5 +1,5 @@
 import { autorun, observable, computed } from "mobx";
-import * as Utils from "../utils";
+import * as utils from "utils";
 
 class User {
     @observable id;
@@ -8,7 +8,7 @@ class User {
 
     constructor(name) {
         this.name = name;
-        this.id = Utils.generateGuid();
+        this.id = utils.generateGuid();
         this.confirmed = false;
     }
 }
