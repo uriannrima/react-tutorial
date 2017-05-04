@@ -1,8 +1,8 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
 
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the 'undefined' type.
+// React.Component<PropsDefinition, StateDefinition>
+// Definition may be a interface, a class, undefined or any.
 @inject('userStore')
 @observer
 export default class extends React.Component<any, any> {
@@ -10,8 +10,11 @@ export default class extends React.Component<any, any> {
         return (
             <div>
                 <h1>Hello</h1>
-                <h3>This was written with Typescript!!! Awsome!</h3>
+                <h3>This is React/Mobx with Typescript!</h3>
                 <h4>{this.props.userStore.filter}</h4>
+                <div>
+                    <input type="text" onChange={(e) => { this.props.userStore.filter = e.target.value; }}></input>
+                </div>
             </div>
         );
     }

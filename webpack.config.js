@@ -8,12 +8,10 @@ module.exports = {
   entry: "./client.js",
   module: {
     loaders: [
-      // ts-loader: convert typescript (es6) to javascript (es6),
-      // babel-loader: converts javascript (es6) to javascript (es5)
       {
-        test: /\.tsx?$/,
-        loaders: ['babel-loader', 'ts-loader'],
-        exclude: /(node_modules|bower_components)/
+        test: /\.tsx?$/, // This loader will be used to process Typescript and TSX.
+        loaders: ['babel-loader', 'ts-loader'], // TS-Loader convert TS(ES6) to JS(ES6), then Babel parse from JSES6 to JSES5.
+        exclude: /(node_modules|bower_components)/ // Don't do it to modules or components.
       },
       {
         test: /\.jsx?$/, // Everything that is js(or jsx, the X is optional since there is a ?) will be processed by this loader, which...
