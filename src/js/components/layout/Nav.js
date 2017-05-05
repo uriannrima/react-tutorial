@@ -28,15 +28,14 @@ export default class extends React.Component {
         const navClass = collapsed ? "collapse" : "";
 
         const NavItens = [
-            { query: "/", label: "Todos", isIndex: true },
+            { query: "/", label: "Todos" },
             { query: "users", label: "Users" },
+            { query: "feats", label: "Feats" },
             { query: "featured", label: "Featured" },
             { query: "favorites", label: "Favorites" },
-            { query: "settings", label: "Settings" },
-            { query: "feats", label: "Feats" }
+            { query: "settings", label: "Settings" }
         ].map((navItem, arrayIndex) => {
             return <NavItem
-                isIndex={navItem.isIndex}
                 key={arrayIndex}
                 active={this.isNavItemActive(navItem.query)}
                 pathName={navItem.query}
