@@ -35,6 +35,7 @@ export default class extends React.Component {
         return (
             <div>
                 <h1>Users</h1>
+                <h3>Made with Mobx and Javascript.</h3>
                 <div>
                     Filter: <input type="text" value={filter} onChange={this.filter.bind(this)}></input>
                 </div>

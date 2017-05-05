@@ -81,6 +81,7 @@ export default class extends React.Component {
         return (
             <div>
                 <h1>Todos</h1>
+                <h3>Made with Flux and Javascript.</h3>
                 <input placeholder="Press enter to create..." value={newTodo.text} onChange={this.updateNewTodo} onKeyUp={this.createTodo}></input>
                 <button onClick={this.reloadTodos}>Reaload!</button>
                 <ul>{TodosComponents}</ul>
