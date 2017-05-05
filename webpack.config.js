@@ -8,6 +8,24 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const devTool = debug ? "inline-sourcemap" : 'cheap-module-source-map';
 const outputPath = debug ? __dirname + "/src/" : __dirname + "/dist/";
+const outputFileName = debug ? "scripts.js" : "scripts.[chunkhash].js";
+const buildPlugins = debug ?
+  [
+    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.js' }),
+    new HtmlWebpackPlugin({ template: 'index.ejs', alwaysWriteToDisk: true }), // Build index.html from index.ejs
+    new HtmlWebpackHarddiskPlugin({ outputPath: path.resolve(__dirname, './src') }), // Write it to ./src
+  ] :
+  [
+    new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } }), // Define production
+    new CleanWebpackPlugin(['dist']), // Clear folder.
+    new HtmlWebpackPlugin({ minify: { collapseWhitespace: true }, template: 'index.ejs' }), // Process index.ejs
+    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.[chunkhash].js' }), // Create vendor.js
+    new webpack.optimize.OccurrenceOrderPlugin(), // Optimize
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true, beautify: false, comments: false, sourceMap: true,
+      mangle: { screw_ie8: true, keep_fnames: true }, compress: { screw_ie8: true }
+    }) // Optimize JS.
+  ]
 
 module.exports = {
   context: path.join(__dirname, "src"), // Context where the command will execute.
@@ -41,26 +59,9 @@ module.exports = {
   },
   output: {
     path: outputPath, // Where the transpiled client.js will be outputed
-    filename: "scripts.min.js" // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
+    filename: outputFileName // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
   },
-  plugins: debug ?
-    [
-      new HtmlWebpackPlugin({ template: 'index.ejs', alwaysWriteToDisk: true }), // Build index.html from index.ejs
-      new HtmlWebpackHarddiskPlugin({ outputPath: path.resolve(__dirname, './src') }), // Write it to ./src
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })
-    ] :
-    [
-      new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } }),
-      new CleanWebpackPlugin(['dist']),
-      new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' }),
-      new HtmlWebpackPlugin({ minify: { collapseWhitespace: true }, template: 'index.ejs' }),
-      new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: false, comments: false, sourceMap: true,
-        mangle: { screw_ie8: true, keep_fnames: true },
-        compress: { screw_ie8: true }
-      })
-    ],
+  plugins: buildPlugins,
   resolve: {
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'], // Allow us to import and automatically use files without extension (like Feat, Feat.js, Feat.ts, etc)
     modules: [path.resolve(__dirname, "./src"), "node_modules"], // Find modules first on our ./src, then try to find on node_modules
