@@ -1,5 +1,5 @@
 import React from "react";
-import { IndexLink, Link } from "react-router";
+import { NavLink } from "react-router-dom";
 
 export default class NavItem extends React.Component {
     constructor() {
@@ -10,18 +10,10 @@ export default class NavItem extends React.Component {
         this.props.onClick(e);
     }
     render() {
-        const { label, pathName, isIndex, active, onClick } = this.props;
-        if (isIndex) {
-            return (
-                <li class={active ? "active" : ""}>
-                    <IndexLink to={pathName} onClick={this.onNavClick}>{label}</IndexLink>
-                </li>
-            );
-        }
-
+        const { label, pathName, active, onClick } = this.props;
         return (
             <li class={active ? "active" : ""}>
-                <Link to={pathName} onClick={this.onNavClick}>{label}</Link>
+                <NavLink to={pathName} onClick={this.onNavClick}>{label}</NavLink>
             </li>
         );
     }

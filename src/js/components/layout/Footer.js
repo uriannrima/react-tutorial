@@ -10,7 +10,7 @@ export default class extends React.Component {
             <footer style={footerStyles}>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p>Copyright &copy; PerfectTodos.com</p>
+                        <p>Copyright &copy; MadeByMe.com</p>
                     </div>
                 </div>
             </footer>

@@ -14,13 +14,12 @@ export default class extends React.Component<{ featStore: FeatStore }, any> {
         return (
             <div>
                 <h1>Feats</h1>
-                <h3>This is a Feat page with React/Mobx with Typescript!</h3>
-                <h4>{featStore.filter}</h4>
+                <h3>Made with Mobx and Typescript.</h3>
                 <div>
-                    <input type="text" onChange={(e) => { featStore.filter = e.currentTarget.value; }}></input>
+                    Filter: <input type="text" onChange={(e) => { featStore.filter = e.currentTarget.value; }}></input>
                 </div>
                 <div>
-                    <input type="text" onKeyPress={(e) => {
+                    New Feat: <input type="text" placeholder="Press enter to create..." onKeyPress={(e) => {
                         if (e.key == "Enter") {
                             featStore.createFeat(e.currentTarget.value);
                             e.currentTarget.value = "";

@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
+        "allowJs": true,
         "target": "es5",
         "moduleResolution": "node",
         "sourceMap": true,
-        "allowJs": true,
         "experimentalDecorators": true,
-        "outDir": "src",
+        "outDir": "dist",
         "jsx": "react",
         "baseUrl": ".",
         "paths": {
@@ -16,9 +16,5 @@
     },
     "exclude": [
         "node_modules"
-    ],
-    "include": [
-        "./src/ts/**/*",
-        "./src/js/**/*"
     ]
 }
