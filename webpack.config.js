@@ -1,12 +1,19 @@
 const debug = process.argv.indexOf('-p') === -1;
 var webpack = require('webpack');
 var path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+
+const devTool = debug ? "inline-sourcemap" : 'cheap-module-source-map';
+const outputPath = debug ? __dirname + "/src/" : __dirname + "/dist/";
 
 module.exports = {
   context: path.join(__dirname, "src"), // Context where the command will execute.
-  devtool: debug ? "inline-sourcemap" : 'cheap-module-source-map',
+  devtool: devTool,
   entry: {
-    app: ["./client.js"],
+    app: ["./script.js"],
     vendor: [
       'react',
       'react-dom',
@@ -32,27 +39,31 @@ module.exports = {
     ]
   },
   output: {
-    path: debug ? __dirname + "/src/" : __dirname + "/dist/", // Where the transpiled client.js will be outputed
-    filename: "client.min.js" // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
+    path: outputPath, // Where the transpiled client.js will be outputed
+    filename: "scripts.min.js" // Where exactly as file, this one should be the one to be inserted in our index.html, since it's "compiled" already.
   },
   plugins: debug ?
     [
+      new HtmlWebpackPlugin({ template: 'index.ejs', alwaysWriteToDisk: true }), // Build index.html from index.ejs
+      new HtmlWebpackHarddiskPlugin({ outputPath: path.resolve(__dirname, './src') }), // Write it to ./src
       new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.bundle.js")
     ] :
     [
       new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } }),
+      new CleanWebpackPlugin(['dist']),
       new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+      new HtmlWebpackPlugin(
+        {
+          minify: { collapseWhitespace: true },
+          template: 'index.ejs'
+        }
+      ),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         beautify: false,
-        mangle: {
-          screw_ie8: true,
-          keep_fnames: true
-        },
-        compress: {
-          screw_ie8: true
-        },
+        mangle: { screw_ie8: true, keep_fnames: true },
+        compress: { screw_ie8: true },
         comments: false
       })
     ],
